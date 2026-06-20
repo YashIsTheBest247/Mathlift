@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import Form from "./components/Form.jsx";
 import Results from "./components/Results.jsx";
 import VideoIntro from "./components/VideoIntro.jsx";
-import WakeLoader from "./components/WakeLoader.jsx";
 import HeroEquations from "./components/HeroEquations.jsx";
 import FeatureShowcase from "./components/FeatureShowcase.jsx";
 import Typewriter from "./components/Typewriter.jsx";
-import { apiUrl, processPdf } from "./api.js";
+import { processPdf } from "./api.js";
 
 const HERO_WORDS = ["scales", "renders", "publishes", "transforms", "ships", "automates"];
 
@@ -21,45 +20,15 @@ export default function App() {
   const [error, setError] = useState("");
   const [dark, setDark] = useState(false);
   const [videoDone, setVideoDone] = useState(reduceMotion);
-  const [backendReady, setBackendReady] = useState(false);
   const toolRef = useRef(null);
   const resultRef = useRef(null);
   const footerRef = useRef(null);
 
-  const ready = videoDone && backendReady;
+  const ready = videoDone;
 
   useEffect(() => {
     document.body.dataset.theme = dark ? "dark" : "light";
   }, [dark]);
-
-  useEffect(() => {
-    let active = true;
-    let timer;
-    async function ping() {
-      try {
-        const controller = new AbortController();
-        const abort = window.setTimeout(() => controller.abort(), 4000);
-        const response = await fetch(apiUrl("/api/health"), { signal: controller.signal });
-        window.clearTimeout(abort);
-        if (response.ok) {
-          if (active) {
-            setBackendReady(true);
-          }
-          return;
-        }
-      } catch (caught) {
-        void caught;
-      }
-      if (active) {
-        timer = window.setTimeout(ping, 1500);
-      }
-    }
-    ping();
-    return () => {
-      active = false;
-      window.clearTimeout(timer);
-    };
-  }, []);
 
   function scrollToTool() {
     toolRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -99,7 +68,6 @@ export default function App() {
   return (
     <div className={ready ? "page is-ready" : "page"}>
       {!videoDone ? <VideoIntro onComplete={() => setVideoDone(true)} /> : null}
-      {videoDone && !backendReady ? <WakeLoader /> : null}
 
       <header className="nav-wrap">
         <nav className="pill">

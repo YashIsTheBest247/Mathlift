@@ -54,7 +54,7 @@ export default function Form({ onSubmit, busy }) {
           className="input"
           type="text"
           value={name}
-          placeholder="Jane Doe"
+          placeholder="Yash Munshi"
           onChange={(event) => setName(event.target.value)}
         />
       </label>

@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MathText from "./MathText.jsx";
 import Pipeline from "./Pipeline.jsx";
+
+const LOADING_MESSAGES = [
+  "Waking engine...",
+  "Initializing AI...",
+  "Reading your pdf...",
+  "Detecting questions...",
+  "Cropping and rendering...",
+  "Almost there...",
+];
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -52,11 +61,22 @@ function Empty() {
 }
 
 function Loading() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setIndex((value) => (value + 1) % LOADING_MESSAGES.length);
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
     <div className="results-empty">
       <div className="spinner" />
-      <p className="results-empty-title">processing pdf</p>
-      <p className="results-empty-sub">detecting and extracting questions</p>
+      <p className="results-empty-title wake-msg" key={index}>
+        {LOADING_MESSAGES[index]}
+      </p>
+      <p className="results-empty-sub">this can take a moment on the first run</p>
     </div>
   );
 }
