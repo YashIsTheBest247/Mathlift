@@ -5,40 +5,22 @@ import VideoIntro from "./components/VideoIntro.jsx";
 import WakeLoader from "./components/WakeLoader.jsx";
 import HeroEquations from "./components/HeroEquations.jsx";
 import FeatureShowcase from "./components/FeatureShowcase.jsx";
+import Typewriter from "./components/Typewriter.jsx";
 import { processPdf } from "./api.js";
+
+const HERO_WORDS = ["scales", "renders", "publishes", "transforms", "ships", "automates"];
 
 const reduceMotion =
   typeof window !== "undefined" &&
   window.matchMedia &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const INTRO_KEY = "mathlift_intro_at";
-const INTRO_TTL = 24 * 60 * 60 * 1000;
-
-function introPlayedRecently() {
-  try {
-    const stored = Number(window.localStorage.getItem(INTRO_KEY) || 0);
-    return stored > 0 && Date.now() - stored < INTRO_TTL;
-  } catch (caught) {
-    void caught;
-    return false;
-  }
-}
-
-function markIntroPlayed() {
-  try {
-    window.localStorage.setItem(INTRO_KEY, String(Date.now()));
-  } catch (caught) {
-    void caught;
-  }
-}
-
 export default function App() {
   const [busy, setBusy] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [dark, setDark] = useState(false);
-  const [videoDone, setVideoDone] = useState(reduceMotion || introPlayedRecently());
+  const [videoDone, setVideoDone] = useState(reduceMotion);
   const [backendReady, setBackendReady] = useState(false);
   const toolRef = useRef(null);
   const resultRef = useRef(null);
@@ -116,14 +98,7 @@ export default function App() {
 
   return (
     <div className={ready ? "page is-ready" : "page"}>
-      {!videoDone ? (
-        <VideoIntro
-          onComplete={() => {
-            markIntroPlayed();
-            setVideoDone(true);
-          }}
-        />
-      ) : null}
+      {!videoDone ? <VideoIntro onComplete={() => setVideoDone(true)} /> : null}
       {videoDone && !backendReady ? <WakeLoader /> : null}
 
       <header className="nav-wrap">
@@ -188,7 +163,7 @@ export default function App() {
               extract<br />
               maths<br />
               that<br />
-              scales
+              <Typewriter words={HERO_WORDS} />
             </h1>
             <button className="hero-pitch" onClick={scrollToTool}>
               <span className="hero-pitch-circle">→</span>

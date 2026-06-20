@@ -1649,3 +1649,23 @@ body[data-theme="dark"] .ghost {
     grid-template-columns: 1fr;
   }
 }
+
+.type-word {
+  white-space: nowrap;
+}
+
+.type-caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.78em;
+  margin-left: 0.04em;
+  background: var(--lime);
+  vertical-align: baseline;
+  animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes caretBlink {
+  50% {
+    opacity: 0;
+  }
+}
