@@ -43,7 +43,11 @@ export default function VideoIntro({ src = "/intro.mp4", speed = 2, onComplete }
         muted
         playsInline
         preload="auto"
+        fetchpriority="high"
+        disablePictureInPicture
+        disableRemotePlayback
         onLoadedMetadata={applySpeed}
+        onCanPlay={applySpeed}
         onPlay={applySpeed}
         onEnded={finish}
         onError={finish}
