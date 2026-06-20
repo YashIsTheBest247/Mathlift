@@ -46,7 +46,7 @@ export default function Form({ onSubmit, busy }) {
   return (
     <form className="panel form" onSubmit={submit}>
       <h2 className="panel-title">extract questions</h2>
-      <p className="panel-sub">scrape · match · render</p>
+      <p className="panel-sub">upload · detect · extract</p>
 
       <label className="field">
         <span className="field-label">name</span>
@@ -54,7 +54,7 @@ export default function Form({ onSubmit, busy }) {
           className="input"
           type="text"
           value={name}
-          placeholder="Yash Munshi"
+          placeholder="Enter name"
           onChange={(event) => setName(event.target.value)}
         />
       </label>
