@@ -14,12 +14,38 @@ const reduceMotion =
   window.matchMedia &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const isMobile =
+  typeof window !== "undefined" &&
+  window.matchMedia &&
+  window.matchMedia("(max-width: 768px)").matches;
+
+const INTRO_KEY = "mathlift_intro_at";
+const INTRO_TTL = 24 * 60 * 60 * 1000;
+
+function introPlayedRecently() {
+  try {
+    const stored = Number(window.localStorage.getItem(INTRO_KEY) || 0);
+    return stored > 0 && Date.now() - stored < INTRO_TTL;
+  } catch (caught) {
+    void caught;
+    return false;
+  }
+}
+
+function markIntroPlayed() {
+  try {
+    window.localStorage.setItem(INTRO_KEY, String(Date.now()));
+  } catch (caught) {
+    void caught;
+  }
+}
+
 export default function App() {
   const [busy, setBusy] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [dark, setDark] = useState(false);
-  const [videoDone, setVideoDone] = useState(reduceMotion);
+  const [videoDone, setVideoDone] = useState(reduceMotion || isMobile || introPlayedRecently());
   const [menuOpen, setMenuOpen] = useState(false);
   const toolRef = useRef(null);
   const resultRef = useRef(null);
@@ -68,7 +94,14 @@ export default function App() {
 
   return (
     <div className={ready ? "page is-ready" : "page"}>
-      {!videoDone ? <VideoIntro onComplete={() => setVideoDone(true)} /> : null}
+      {!videoDone ? (
+        <VideoIntro
+          onComplete={() => {
+            markIntroPlayed();
+            setVideoDone(true);
+          }}
+        />
+      ) : null}
 
       <header className="nav-wrap">
         <nav className="pill">

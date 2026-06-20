@@ -1320,6 +1320,21 @@ body[data-theme="dark"] .ghost {
   .panel {
     padding: 20px;
   }
+  .results {
+    min-height: auto;
+  }
+  .results-empty {
+    height: auto;
+    padding: 48px 0;
+  }
+  .pipeline-icon {
+    width: 56px;
+    height: 56px;
+  }
+  .pipeline-line,
+  .flow-dot {
+    top: 28px;
+  }
   .results-head {
     flex-direction: column;
     align-items: flex-start;
