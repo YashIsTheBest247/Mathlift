@@ -1,20 +1,60 @@
 import { useEffect, useRef, useState } from "react";
 import Form from "./components/Form.jsx";
 import Results from "./components/Results.jsx";
+import VideoIntro from "./components/VideoIntro.jsx";
+import WakeLoader from "./components/WakeLoader.jsx";
 import { processPdf } from "./api.js";
+
+const reduceMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export default function App() {
   const [busy, setBusy] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [dark, setDark] = useState(false);
+  const [videoDone, setVideoDone] = useState(reduceMotion);
+  const [backendReady, setBackendReady] = useState(false);
   const toolRef = useRef(null);
   const resultRef = useRef(null);
   const footerRef = useRef(null);
 
+  const ready = videoDone && backendReady;
+
   useEffect(() => {
     document.body.dataset.theme = dark ? "dark" : "light";
   }, [dark]);
+
+  useEffect(() => {
+    let active = true;
+    let timer;
+    async function ping() {
+      try {
+        const controller = new AbortController();
+        const abort = window.setTimeout(() => controller.abort(), 4000);
+        const response = await fetch("/api/health", { signal: controller.signal });
+        window.clearTimeout(abort);
+        if (response.ok) {
+          if (active) {
+            setBackendReady(true);
+          }
+          return;
+        }
+      } catch (caught) {
+        void caught;
+      }
+      if (active) {
+        timer = window.setTimeout(ping, 1500);
+      }
+    }
+    ping();
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   function scrollToTool() {
     toolRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -47,7 +87,10 @@ export default function App() {
   }
 
   return (
-    <div className="page">
+    <div className={ready ? "page is-ready" : "page"}>
+      {!videoDone ? <VideoIntro onComplete={() => setVideoDone(true)} /> : null}
+      {videoDone && !backendReady ? <WakeLoader /> : null}
+
       <header className="nav-wrap">
         <nav className="pill">
           <button className="pill-brand" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
@@ -84,9 +127,6 @@ export default function App() {
                 From paper to renderable questions in seconds.
               </p>
             </div>
-            <button className="promo-link" onClick={scrollToTool}>
-              Start <span className="arrow">→</span>
-            </button>
           </aside>
 
           <div className="hero-mid">
