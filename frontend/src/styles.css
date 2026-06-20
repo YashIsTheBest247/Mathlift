@@ -158,7 +158,7 @@ sup {
 
 .pill-cta:hover {
   background: var(--lime);
-  color: var(--ink);
+  color: #0a0a0a;
   transform: translateY(-1px);
 }
 
@@ -223,7 +223,7 @@ sup {
   font-family: var(--mono);
   font-size: 13px;
   font-weight: 700;
-  color: var(--ink);
+  color: #0a0a0a;
   background: var(--lime);
   border-radius: 6px;
   padding: 3px 7px;
@@ -330,6 +330,8 @@ sup {
   line-height: 0.86;
   letter-spacing: -0.045em;
   text-transform: lowercase;
+  transform: scaleX(1.12);
+  transform-origin: right center;
 }
 
 .hero-pitch {
@@ -360,7 +362,7 @@ sup {
 
 .hero-pitch:hover .hero-pitch-circle {
   background: var(--lime);
-  color: var(--ink);
+  color: #0a0a0a;
   transform: translateX(4px);
 }
 
@@ -568,8 +570,8 @@ body[data-theme="dark"] .ghost {
 }
 
 .seg-on {
-  background: var(--ink);
-  color: var(--lime);
+  background: var(--lime);
+  color: #0a0a0a;
 }
 
 .seg:has(input:focus-visible) {
@@ -627,7 +629,7 @@ body[data-theme="dark"] .ghost {
 
 .submit:hover {
   background: var(--lime);
-  color: var(--ink);
+  color: #0a0a0a;
   transform: translateY(-1px);
 }
 
